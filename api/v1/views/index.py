@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 """
 Create a route /status on the object app_views
-that returns a JSON: "status": "OK
-""""
+that returns a JSON
+"""
 
 from models import storage
 from api.v1.views import app_views
-from flask import Flask, jsonif
+from flask import Flask, jsonify
 
 
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
