@@ -27,3 +27,21 @@ class User(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """initializes user"""
         super().__init__(*args, **kwargs)
+        if 'password' in kwargs:
+            # Hash the password if provided during initialization
+            self.password = hashlib.md5(kwargs['password'].encode()).hexdigest()
+
+
+    def __setattr__(self, name, value):
+        """Hash the password before setting it as an attribute."""
+        if name == 'password':
+            value = hashlib.md5(value.encode()).hexdigest()
+        super().__setattr__(name, value)
+
+    def to_dict(self, save_to_disk=False):
+        """Return a dictionary representation of the User object."""
+        user_dict = super().to_dict()
+        if not save_to_disk:
+            # Remove 'password' from the dictionary if not saving to disk
+            user_dict.pop('password', None)
+        return user_dict
