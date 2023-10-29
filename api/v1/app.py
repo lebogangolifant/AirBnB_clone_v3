@@ -21,6 +21,7 @@ def not_found(error):
     """Custom 404 error response."""
     return jsonify({'error': 'Not found'}), 404
 
+
 if __name__ == '__main__':
     app.run(host=getenv('HBNB_API_HOST', '0.0.0.0'),
             port=getenv('HBNB_API_PORT', '5000'), threaded=True)
