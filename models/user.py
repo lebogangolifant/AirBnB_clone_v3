@@ -6,6 +6,7 @@ from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+import hashlib
 
 
 class User(BaseModel, Base):
@@ -25,23 +26,12 @@ class User(BaseModel, Base):
         last_name = ""
 
     def __init__(self, *args, **kwargs):
-        """initializes user"""
+        """Initializes a user instance"""
+        if kwargs:
+            # Get the 'password' attribute from keyword arguments
+            password_dt = kwarg.pop("password", None)
+            if password_dt:
+                # Hash the password using MD5 and update the password attribute
+                password_md5 = hashlib.md5(password_dt.encode()).hexdigest()
+                setattr(self, "password", password_md5)
         super().__init__(*args, **kwargs)
-        if 'password' in kwargs:
-            # Hash the password if provided during initialization
-            self.password = hashlib.md5(kwargs['password'].encode()).hexdigest()
-
-
-    def __setattr__(self, name, value):
-        """Hash the password before setting it as an attribute."""
-        if name == 'password':
-            value = hashlib.md5(value.encode()).hexdigest()
-        super().__setattr__(name, value)
-
-    def to_dict(self, save_to_disk=False):
-        """Return a dictionary representation of the User object."""
-        user_dict = super().to_dict()
-        if not save_to_disk:
-            # Remove 'password' from the dictionary if not saving to disk
-            user_dict.pop('password', None)
-        return user_dict

@@ -106,7 +106,7 @@ def search_places():
     amenities = data.get("amenities", [])
 
     place_objs = []
-    
+
     if not (states or cities):
         # If states and cities lists are empty, retrieve all places
         place_objs = storage.all(Place).values()
